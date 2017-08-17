@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Memory</title>
+
+
+</head>
+<style>
+    body {
+        margin: 0;
+    }
+
+    #welcome {
+        background-color: blue;
+        color: white;
+        display: flex;
+        height: 100vh;
+        padding-bottom: 200px;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    #board {
+        background-color: gray;
+        width: 100%;
+        padding: 1.5vw;
+        display: none;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-content: flex-start;
+        perspective: 800px;
+        box-sizing: border-box;
+    }
+    .tile {
+        width: 22vw;
+        height: 22vw;
+        margin: 1vw 0;
+        transition: 0.5s;
+        transform: rotateY(0deg);
+        position: relative;
+        transform-style: preserve-3d;
+        z-index: 3;
+    }
+    .flipped {
+        transition: 0.5s;
+        transform: rotateY(180deg);
+        transform-style: preserve-3d;
+    }
+    .front, .back {
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .front {
+        background: url('img_front.jpg');
+        background-size: cover; 
+        backface-visibility: hidden;
+        transform: rotateY(0deg); 
+        z-index: 2;
+    }
+    .back {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        backface-visibility: hidden;
+        transform: rotateY(180deg); 
+        z-index: 1;
+        font-size: 250%;
+    }
+
+</style>
+<body>
+    <div id="welcome">
+        <h2>Welcome to the memory game.</h2>
+        <p>Choose number of tiles</p>
+        <form id="playGame">
+            <select name="numberOfTiles" id="numberOfTiles">
+                <option value="">choose number of tiles</option>
+                <option value="16">16</option>
+                <option value="20">20</option>
+                <option value="24">24</option>
+            </select>
+            <button type="submit">Play game</button>
+        </form>
+    </div>
+    <div id="board">
+    </div>
+
+    <script>
+        const tileImgs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+        const board = document.getElementById("board");
+        const welcome = document.getElementById("welcome");
+
+        function drawBoard(event) {
+            
+            event.preventDefault();
+            welcome.style.display = 'none';
+            board.style.display = 'flex';
+            for (i=0; i<playGame.numberOfTiles.value; i++) {
+                let content = '';
+                content += '<section class="tile" data-tile="'+i+'">';
+                content += '<div class="front"></div>';
+                content += '<div class="back">'+i+'</div>';
+                content += '</section>';
+
+                board.innerHTML += content;
+            }
+        }
+
+        function flipBack() {
+            let allTiles = document.getElementsByClassName('tile')
+            for (i = 0; i < allTiles.length; i += 1) {
+                    allTiles[i].classList.remove('flipped');
+            }
+            document.getElementById('board').style.pointerEvents = 'auto';
+
+        }
+
+        function twoTiles() {
+            let flippedTiles = document.getElementsByClassName('flipped');
+            if (flippedTiles.length >= 2) {
+                document.getElementById('board').style.pointerEvents = 'none';
+                setTimeout(flipBack, 2000);
+            }
+        }
+
+        function flipTile(event) {
+        if (event.target !== event.currentTarget) {
+            event.target.parentNode.classList.add('flipped');
+            twoTiles();
+        }
+        //event.stopPropagation();
+    }
+
+    playGame.addEventListener("submit", drawBoard, false);
+    board.addEventListener("click", flipTile, false);
+
+    </script>
+    
+</body>
+</html>
