@@ -100,6 +100,8 @@
         const tileImgs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
         const board = document.getElementById("board");
         const welcome = document.getElementById("welcome");
+        let tilesFlipped = [];
+        let tilesMatch = [];
 
         function drawBoard(event) {         
             event.preventDefault();
@@ -123,28 +125,37 @@
         }
 
         function flipBack() {
-            let allTiles = document.getElementsByClassName('tile')
-            for (i = 0; i < allTiles.length; i += 1) {
-                    allTiles[i].classList.remove('flipped');
-            }
+            let allTiles = board.getElementsByClassName('tile');
+            allTiles[parseInt(tilesFlipped[0])].classList.remove('flipped');
+            allTiles[parseInt(tilesFlipped[1])].classList.remove('flipped');
+            tilesFlipped = [];
+            tilesMatch = [];
             document.getElementById('board').style.pointerEvents = 'auto';
 
         }
 
         function twoTiles() {
-            let flippedTiles = document.getElementsByClassName('flipped');
-            if (flippedTiles.length >= 2) {
+            if (tilesFlipped.length >= 2) {
                 document.getElementById('board').style.pointerEvents = 'none';
-                setTimeout(flipBack, 2000);
+                if (tilesMatch[0] === tilesMatch[1]) {
+                    tilesFlipped = [];
+                    tilesMatch = [];
+                    document.getElementById('board').style.pointerEvents = 'auto';  
+                } else {
+                    setTimeout(flipBack, 2000);
+                }
             }
         }
 
         function flipTile(event) {
-        if (event.target !== event.currentTarget) {
-            event.target.parentNode.classList.add('flipped');
-            twoTiles();
-        }
-        //event.stopPropagation();
+    
+            if (event.target !== event.currentTarget) {
+                event.target.parentNode.classList.add('flipped');
+                tilesFlipped.push(event.target.parentNode.getAttribute('data-tile'))
+                tilesMatch.push(event.target.nextSibling.innerHTML);
+                twoTiles();
+            }
+        event.stopPropagation();
     }
 
     playGame.addEventListener("submit", drawBoard, false);
