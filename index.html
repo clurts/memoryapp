@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="doubleshuffle.js"></script>
     <title>Memory</title>
 
 
@@ -66,6 +67,7 @@
         transform: rotateY(0deg); 
         z-index: 2;
     }
+    
     .back {
         display: flex;
         justify-content: center;
@@ -99,16 +101,21 @@
         const board = document.getElementById("board");
         const welcome = document.getElementById("welcome");
 
-        function drawBoard(event) {
-            
+        function drawBoard(event) {         
             event.preventDefault();
             welcome.style.display = 'none';
             board.style.display = 'flex';
+
+            let gameTiles = playGame.numberOfTiles.value;
+            let gameTileImgs = tileImgs.slice(0, gameTiles/2);
+            gameTileImgs = gameTileImgs.doubleShuffle();
+
             for (i=0; i<playGame.numberOfTiles.value; i++) {
+
                 let content = '';
                 content += '<section class="tile" data-tile="'+i+'">';
                 content += '<div class="front"></div>';
-                content += '<div class="back">'+i+'</div>';
+                content += '<div class="back">'+gameTileImgs[i]+'</div>';
                 content += '</section>';
 
                 board.innerHTML += content;
