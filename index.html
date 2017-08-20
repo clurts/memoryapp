@@ -124,6 +124,15 @@
             }
         }
 
+        function endOfGame () {
+            if (board.getElementsByClassName('tile').length === (board.getElementsByClassName('flipped').length)){
+                alert("Congrats! You got 'em all!");
+                board.innerHTML = '';
+                board.style.display = 'none'; 
+                welcome.style.display = 'flex';
+            }
+        }
+
         function flipBack() {
             let allTiles = board.getElementsByClassName('tile');
             allTiles[parseInt(tilesFlipped[0])].classList.remove('flipped');
@@ -140,6 +149,7 @@
                 if (tilesMatch[0] === tilesMatch[1]) {
                     tilesFlipped = [];
                     tilesMatch = [];
+                    setTimeout(endOfGame, 700);
                     document.getElementById('board').style.pointerEvents = 'auto';  
                 } else {
                     setTimeout(flipBack, 2000);
