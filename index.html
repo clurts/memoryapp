@@ -64,6 +64,7 @@
         background: url('img_front.jpg');
         background-size: cover; 
         backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
         transform: rotateY(0deg); 
         z-index: 2;
     }
@@ -73,6 +74,7 @@
         justify-content: center;
         align-items: center;
         backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
         transform: rotateY(180deg); 
         z-index: 1;
         font-size: 250%;
@@ -83,7 +85,7 @@
     <div id="welcome">
         <h2>Welcome to the memory game.</h2>
         <p>Choose number of tiles</p>
-        <form id="playGame">
+        <form id="playGame" method="post">
             <select name="numberOfTiles" id="numberOfTiles">
                 <option value="">choose number of tiles</option>
                 <option value="16">16</option>
@@ -98,8 +100,6 @@
 
     <script>
         const tileImgs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
-        const board = document.getElementById("board");
-        const welcome = document.getElementById("welcome");
         let tilesFlipped = [];
         let tilesMatch = [];
 
@@ -122,6 +122,7 @@
 
                 board.innerHTML += content;
             }
+            return false;
         }
 
         function endOfGame () {
@@ -170,7 +171,6 @@
 
     playGame.addEventListener("submit", drawBoard, false);
     board.addEventListener("click", flipTile, false);
-
     </script>
     
 </body>
