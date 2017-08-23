@@ -137,11 +137,6 @@
         const tileImgs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
         let tilesFlipped = [];
         let tilesMatch = [];
-        var audioFlip = new Audio('flip.wav');
-
-        function tilesPlayed(val) {
-          playGame.getElementsByTagName('h2')[0].innerHTML = val; 
-        }
 
         function drawBoard(event) {         
             event.preventDefault();
