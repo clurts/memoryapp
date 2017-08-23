@@ -1,21 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" manifest="manifest.appcache">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="apple-touch-icon-precomposed" href="icon.png"/>
+    <link rel="apple-touch-icon" href="icon.png"/>
     <script src="doubleshuffle.js"></script>
     <title>Memory</title>
-
-
 </head>
 <style>
+
     body {
         margin: 0;
+        overflow: hidden;
+        font-family: Helvetica, Arial, sans-serif;
     }
+    input[type="radio"] {
+        display: none;
+    }
+    #playGame {
+        text-align: center;
+    }
+    #playGame label {
+        display: inline-block;
+        padding: 20px;
+        border: 2px solid white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        box-sizing: border-box;
+        margin: 40px 0 70px;
+    }
+    input[type="radio"]:checked + label {
+        background-color: white;
+        color: rgb(60,120,170)
+    }
+    button[type="submit"] {
+        display: block;
+        margin: 0 auto;
+        padding:20px 40px;
+        background-color: white;
+        font-weight: bold;
+        border: none;
+        color: rgb(60,120,170);
+    } 
 
     #welcome {
-        background-color: blue;
+        background-color: rgb(60,120,170);
         color: white;
         display: flex;
         height: 100vh;
@@ -23,10 +56,10 @@
         flex-direction: column;
         justify-content: center;
         text-align: center;
-    }
+    } 
 
     #board {
-        background-color: gray;
+        background-color: #ddd;
         width: 100%;
         padding: 1.5vw;
         display: none;
@@ -40,14 +73,15 @@
         width: 22vw;
         height: 22vw;
         margin: 1vw 0;
-        transition: 0.5s;
+        transition: 0.3s;
         transform: rotateY(0deg);
         position: relative;
         transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
         z-index: 3;
     }
     .flipped {
-        transition: 0.5s;
+        transition: 0.3s;
         transform: rotateY(180deg);
         transform-style: preserve-3d;
     }
@@ -61,7 +95,7 @@
     }
 
     .front {
-        background: url('img_front.jpg');
+        background: url('icon.svg');
         background-size: cover; 
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
@@ -80,18 +114,19 @@
         font-size: 250%;
     }
 
+
+
 </style>
 <body>
     <div id="welcome">
-        <h2>Welcome to the memory game.</h2>
+        <h1>Welcome to the memory game</h1>
         <p>Choose number of tiles</p>
         <form id="playGame" method="post">
-            <select name="numberOfTiles" id="numberOfTiles">
-                <option value="">choose number of tiles</option>
-                <option value="16">16</option>
-                <option value="20">20</option>
-                <option value="24">24</option>
-            </select>
+            
+            <input type="radio" name="numberOfTiles" value="16" id="sixteen" checked><label for="sixteen">16</label>
+            <input type="radio" name="numberOfTiles" value="20" id="twenty"><label for="twenty">20</label>
+            <input type="radio" name="numberOfTiles" value="24" id="twentyfour"><label for="twentyfour">24</label>
+            
             <button type="submit">Play game</button>
         </form>
     </div>
@@ -102,6 +137,11 @@
         const tileImgs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
         let tilesFlipped = [];
         let tilesMatch = [];
+        var audioFlip = new Audio('flip.wav');
+
+        function tilesPlayed(val) {
+          playGame.getElementsByTagName('h2')[0].innerHTML = val; 
+        }
 
         function drawBoard(event) {         
             event.preventDefault();
@@ -150,10 +190,10 @@
                 if (tilesMatch[0] === tilesMatch[1]) {
                     tilesFlipped = [];
                     tilesMatch = [];
-                    setTimeout(endOfGame, 700);
+                    setTimeout(endOfGame, 400);
                     document.getElementById('board').style.pointerEvents = 'auto';  
                 } else {
-                    setTimeout(flipBack, 2000);
+                    setTimeout(flipBack, 1200);
                 }
             }
         }
