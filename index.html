@@ -11,17 +11,18 @@
     <title>Memory</title>
 </head>
 <style>
-
     body {
         margin: 0;
-        overflow: hidden;
+        position: relative;
         font-family: Helvetica, Arial, sans-serif;
+        height: 100vh;
     }
     input[type="radio"] {
         display: none;
     }
     #playGame {
         text-align: center;
+        margin-bottom: 40px;
     }
     #playGame label {
         display: inline-block;
@@ -46,18 +47,15 @@
         border: none;
         color: rgb(60,120,170);
     } 
-
     #welcome {
         background-color: rgb(60,120,170);
         color: white;
         display: flex;
         height: 100vh;
-        padding-bottom: 200px;
         flex-direction: column;
         justify-content: center;
         text-align: center;
     } 
-
     #board {
         background-color: #ddd;
         width: 100%;
@@ -68,6 +66,19 @@
         align-content: flex-start;
         perspective: 800px;
         box-sizing: border-box;
+    }
+    #message {
+        background-color: #ddd;
+        width: 80%;
+        padding: 20px;
+        box-sizing: border-box;
+        position: absolute;
+        top: -500px;
+        left: 10%;
+        transition: all .4s
+    }
+    #message.showmessage {
+        top: 15%;
     }
     .tile {
         width: 22vw;
@@ -93,7 +104,6 @@
         right: 0;
         top: 0;
     }
-
     .front {
         background: url('icon.svg');
         background-size: cover; 
@@ -102,7 +112,6 @@
         transform: rotateY(0deg); 
         z-index: 2;
     }
-    
     .back {
         display: flex;
         justify-content: center;
@@ -113,8 +122,6 @@
         z-index: 1;
         font-size: 250%;
     }
-
-
 
 </style>
 <body>
@@ -131,6 +138,10 @@
         </form>
     </div>
     <div id="board">
+    </div>
+    <div id="message">
+        <p>Congrats! You got 'em all!</p>
+        <button>End game!</button>
     </div>
 
     <script>
@@ -162,11 +173,16 @@
 
         function endOfGame () {
             if (board.getElementsByClassName('tile').length === (board.getElementsByClassName('flipped').length)){
-                alert("Congrats! You got 'em all!");
-                board.innerHTML = '';
-                board.style.display = 'none'; 
-                welcome.style.display = 'flex';
+                //alert("Congrats! You got 'em all!");
+                message.classList.add('showmessage');
             }
+        }
+        
+        function newGame () {
+            board.innerHTML = '';
+            board.style.display = 'none'; 
+            welcome.style.display = 'flex';
+            message.classList.remove('showmessage');
         }
 
         function flipBack() {
@@ -201,11 +217,17 @@
                 tilesMatch.push(event.target.nextSibling.innerHTML);
                 twoTiles();
             }
-        event.stopPropagation();
-    }
+            event.stopPropagation();
+        }
 
-    playGame.addEventListener("submit", drawBoard, false);
-    board.addEventListener("click", flipTile, false);
+        function dontMove(event) {
+            event.preventDefault();
+        }
+
+        playGame.addEventListener("submit", drawBoard, false);
+        board.addEventListener("click", flipTile, false);
+        document.body.addEventListener('touchmove', dontMove, false);
+        message.getElementsByTagName('button')[0].addEventListener("click", newGame, false);
     </script>
     
 </body>
