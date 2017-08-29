@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" manifest="manifest.appcache">
+<html lang="en">
+    <!--manifest="manifest.appcache" -->
 <head>
     <meta charset="UTF-8">
     <meta name="apple-mobile-web-app-capable" content="yes">    
@@ -225,7 +226,7 @@
         }
 
         playGame.addEventListener("submit", drawBoard, false);
-        board.addEventListener("click", flipTile, false);
+        board.addEventListener("touchend", flipTile, false);
         document.body.addEventListener('touchmove', dontMove, false);
         message.getElementsByTagName('button')[0].addEventListener("click", newGame, false);
     </script>
