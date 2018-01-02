@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" manifest="manifest.appcache">
     <!-- manifest="manifest.appcache"-->
 <head>
     <meta charset="UTF-8">
@@ -10,16 +10,8 @@
     <link rel="apple-touch-icon" href="icon.png"/>
     <link rel="manifest" href="web-app-manifest.json">
     
-
-    <!-- iPhone 5 -->
-    <link href="splash2.png"
-    media="(device-width: 320px) and (device-height: 568px)
-    and (-webkit-device-pixel-ratio: 2)"
-    rel="apple-touch-startup-image">
-
-
-
     <script src="doubleshuffle.js"></script>
+    <script src="router.js"></script>
     <title>Memory</title>
 </head>
 <style>
@@ -162,30 +154,31 @@
     </div>
 
     <script>
-        const tileImgs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+        var tiles = {
+            'images' : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+        }
         let tilesFlipped = [];
         let tilesMatch = [];
 
-        function drawBoard(event) {         
+        function drawBoard(event, gameTiles) {  
             event.preventDefault();
-            welcome.style.display = 'none'; 
-            board.style.display = 'flex';
+            router.hide(welcome); 
+            router.show(board);
 
-            let gameTiles = playGame.numberOfTiles.value;
-            let gameTileImgs = tileImgs.slice(0, gameTiles/2);
-            gameTileImgs = gameTileImgs.doubleShuffle();
+            let gameTiles = tiles.images.slice(0, gameTiles/2);
+            gameTileImgs = gameTiles.doubleShuffle();
 
-            for (i=0; i<playGame.numberOfTiles.value; i++) {
 
-                let content = '';
-                content += '<section class="tile" data-tile="'+i+'">';
-                content += '<div class="front"></div>';
-                content += '<div class="back"><img src="'+gameTileImgs[i]+'".jpg</div>';
-                content += '</section>';
-
-                board.innerHTML += content;
-            }
-            return false;
+            var imagelist = `
+                ${(gameTileImgs).map(function(image) { 
+                    return `
+                    <section class="tile">
+                    <div class="front"></div>
+                    <div class="back">${image}</div>
+                    </section>
+                `}
+                ).join('')}`;
+            board.appendChild(parsefordom(imagelist));
         }
 
         function endOfGame () {
@@ -202,10 +195,16 @@
             message.classList.remove('showmessage');
         }
 
+        function classToggle(element, classToToggle) {
+            element.classList.toggle(classToToggle);
+        }
+
         function flipBack() {
             let allTiles = board.getElementsByClassName('tile');
-            allTiles[parseInt(tilesFlipped[0])].classList.remove('flipped');
-            allTiles[parseInt(tilesFlipped[1])].classList.remove('flipped');
+
+            tilesFlipped.map(function(index) {
+                classToggle(allTiles[index], 'flipped');
+            });
             tilesFlipped = [];
             tilesMatch = [];
             document.getElementById('board').style.pointerEvents = 'auto';
@@ -217,8 +216,10 @@
                 document.getElementById('board').style.pointerEvents = 'none';
                 if (tilesMatch[0] === tilesMatch[1]) {
                     let allTiles = board.getElementsByClassName('tile');
-                    allTiles[parseInt(tilesFlipped[0])].classList.add('reward');
-                    allTiles[parseInt(tilesFlipped[1])].classList.add('reward'); 
+
+                    tilesFlipped.map(function(index) {
+                        classToggle(allTiles[index], 'reward')
+                    });
                     tilesFlipped = [];
                     tilesMatch = [];
                     setTimeout(endOfGame, 400);
@@ -229,13 +230,15 @@
             }
         }
 
-        function flipTile(event) {
-    
+        function flipTile(event) {  
+            var tiles = Array.from(document.querySelectorAll('.tile'));
             if (event.target !== event.currentTarget) {
-                event.target.parentNode.classList.add('flipped');
-                tilesFlipped.push(event.target.parentNode.getAttribute('data-tile'))
-                tilesMatch.push(event.target.nextSibling.innerHTML);
-                twoTiles();
+                if (!event.target.parentNode.classList.contains('flipped')) {
+                    event.target.parentNode.classList.toggle('flipped');
+                    tilesFlipped.push(tiles.indexOf(event.target.parentNode))
+                    tilesMatch.push(event.target.nextElementSibling.innerHTML);
+                    twoTiles();
+                }
             }
             event.stopPropagation();
         }
@@ -243,11 +246,17 @@
         function dontMove(event) {
             event.preventDefault();
         }
+        var parsefordom = function(string) {
+            var parsed = document.createRange().createContextualFragment(string);
+            return parsed;
+        }
 
-        playGame.addEventListener("submit", drawBoard, false);
-        board.addEventListener("touchend", flipTile, false);
-        document.body.addEventListener('touchmove', dontMove, false);
-        message.getElementsByTagName('button')[0].addEventListener("click", newGame, false);
+        playGame.addEventListener("submit", function(event) {
+            drawBoard(event, playGame.numberOfTiles.value)}
+        );
+        board.addEventListener("touchend", flipTile);
+        document.body.addEventListener('touchmove', dontMove);
+        message.querySelector('button').addEventListener("click", newGame);
     </script>
     
 </body>
