@@ -134,38 +134,53 @@
 
 </style>
 <body>
-    <div id="welcome">
-        <h1>Welcome to the memory game</h1>
-        <p>Choose number of tiles</p>
-        <form id="playGame" method="post">
-            
-            <input type="radio" name="numberOfTiles" value="16" id="sixteen" checked><label for="sixteen">16</label>
-            <input type="radio" name="numberOfTiles" value="20" id="twenty"><label for="twenty">20</label>
-            <input type="radio" name="numberOfTiles" value="24" id="twentyfour"><label for="twentyfour">24</label>
-            
-            <button type="submit">Play game</button>
-        </form>
-    </div>
-    <div id="board">
-    </div>
+    <div id="welcome"></div>
+    <div id="board"></div>
     <div id="message">
         <p>Congrats! You got 'em all!</p>
         <button>End game!</button>
     </div>
 
     <script>
-        var tiles = {
-            'images' : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
-        }
+        var tiles = {'images' : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']}
+        var noOfTiles;
         let tilesFlipped = [];
         let tilesMatch = [];
 
-        function drawBoard(event, gameTiles) {  
+        function newGame () {
+            if (message.classList.contains('showmessage')) {
+                message.classList.remove('showmessage');
+            }
+            router.hide(board); 
+            router.show(welcome);
+
+            let welcomeMsg =`
+            <h1>Welcome to the memory game</h1>
+            <p>Choose number of tiles</p>
+            <form id="playGame" method="post">
+                
+                <input type="radio" name="numberOfTiles" value="16" id="sixteen" checked><label for="sixteen">16</label>
+                <input type="radio" name="numberOfTiles" value="20" id="twenty"><label for="twenty">20</label>
+                <input type="radio" name="numberOfTiles" value="24" id="twentyfour"><label for="twentyfour">24</label>
+                
+                <button type="submit">Play game</button>
+            </form>
+            `;
+            welcome.appendChild(parsefordom(welcomeMsg));
+
+            playGame.addEventListener("submit", function(event) {
+                drawBoard(event, playGame.numberOfTiles.value)}
+            );
+        }
+
+
+        function drawBoard(event, playTiles) { 
             event.preventDefault();
+            noOfTiles = parseInt(playTiles); 
             router.hide(welcome); 
             router.show(board);
 
-            let gameTiles = tiles.images.slice(0, gameTiles/2);
+            let gameTiles = tiles.images.slice(0, noOfTiles/2);
             gameTileImgs = gameTiles.doubleShuffle();
 
 
@@ -179,22 +194,16 @@
                 `}
                 ).join('')}`;
             board.appendChild(parsefordom(imagelist));
+
+            board.addEventListener("touchend", flipTile);
         }
 
         function endOfGame () {
-            if (board.getElementsByClassName('tile').length === (board.getElementsByClassName('flipped').length)){
-                //alert("Congrats! You got 'em all!");
+            if (board.querySelectorAll('.flipped').length === noOfTiles){
                 message.classList.add('showmessage');
             }
         }
         
-        function newGame () {
-            board.innerHTML = '';
-            board.style.display = 'none'; 
-            welcome.style.display = 'flex';
-            message.classList.remove('showmessage');
-        }
-
         function classToggle(element, classToToggle) {
             element.classList.toggle(classToToggle);
         }
@@ -251,10 +260,7 @@
             return parsed;
         }
 
-        playGame.addEventListener("submit", function(event) {
-            drawBoard(event, playGame.numberOfTiles.value)}
-        );
-        board.addEventListener("touchend", flipTile);
+        document.addEventListener('DOMContentLoaded', newGame);
         document.body.addEventListener('touchmove', dontMove);
         message.querySelector('button').addEventListener("click", newGame);
     </script>

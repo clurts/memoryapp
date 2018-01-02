@@ -11,7 +11,9 @@ var router = (function(){
             element.style.display = 'flex';
         },
         hide: function(element){
-            clear(element);
+            if(element.hasChildNodes()) {
+                clear(element);
+            }
             element.style.display = 'none';
         }
     }
