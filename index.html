@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" manifest="manifest.appcache">
     <!-- manifest="manifest.appcache"-->
 <head>
     <meta charset="UTF-8">
@@ -180,7 +180,7 @@
                 let content = '';
                 content += '<section class="tile" data-tile="'+i+'">';
                 content += '<div class="front"></div>';
-                content += '<div class="back"><img src="'+gameTileImgs[i]+'".jpg</div>';
+                content += '<div class="back">'+gameTileImgs[i]+'</div>';
                 content += '</section>';
 
                 board.innerHTML += content;
@@ -229,13 +229,14 @@
             }
         }
 
-        function flipTile(event) {
-    
+        function flipTile(event) {  
             if (event.target !== event.currentTarget) {
-                event.target.parentNode.classList.add('flipped');
-                tilesFlipped.push(event.target.parentNode.getAttribute('data-tile'))
-                tilesMatch.push(event.target.nextSibling.innerHTML);
-                twoTiles();
+                if (!event.target.parentNode.classList.contains('flipped')) {
+                    event.target.parentNode.classList.add('flipped');
+                    tilesFlipped.push(event.target.parentNode.getAttribute('data-tile'))
+                    tilesMatch.push(event.target.nextSibling.innerHTML);
+                    twoTiles();
+                }
             }
             event.stopPropagation();
         }
