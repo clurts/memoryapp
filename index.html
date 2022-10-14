@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon-precomposed" href="icon.png"/>
     <link rel="apple-touch-icon" href="icon.png"/>
     <link rel="manifest" href="web-app-manifest.json">
-    
+    <link rel="stylesheet" href="style.css">
 
     <!-- iPhone 5 -->
     <link href="splash2.png"
@@ -22,127 +22,7 @@
     <script src="doubleshuffle.js"></script>
     <title>Memory</title>
 </head>
-<style>
-    body {
-        margin: 0;
-        position: relative;
-        font-family: Helvetica, Arial, sans-serif;
-        height: 100vh;
-    }
-    input[type="radio"] {
-        display: none;
-    }
-    #playGame {
-        text-align: center;
-        margin-bottom: 40px;
-    }
-    #playGame label {
-        display: inline-block;
-        padding: 20px;
-        border: 2px solid white;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        box-sizing: border-box;
-        margin: 40px 0 70px;
-    }
-    input[type="radio"]:checked + label {
-        background-color: white;
-        color: rgb(60,120,170)
-    }
-    button[type="submit"] {
-        display: block;
-        margin: 0 auto;
-        padding:20px 40px;
-        background-color: white;
-        font-weight: bold;
-        border: none;
-        color: rgb(60,120,170);
-        border-radius: 1rem;
-        /* i have put border-radius on the playgame button */
-    } 
-    #welcome {
-        background-color: rgb(60,120,170);
-        color: white;
-        display: flex;
-        height: 100vh;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-    } 
-    #board {
-        background-color: #ddd;
-        width: 100%;
-        padding: 1.5vw;
-        display: none;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        align-content: flex-start;
-        perspective: 800px;
-        box-sizing: border-box;
-    }
-    #message {
-        background-color: #ddd;
-        width: 80%;
-        padding: 20px;
-        box-sizing: border-box;
-        position: absolute;
-        top: -500px;
-        left: 10%;
-        transition: all .4s;
-    }
-    #message.showmessage {
-        top: 15%;
-    }
-    .tile {
-        width: 22vw;
-        height: 22vw;
-        margin: 1vw 0;
-        transition: 0.3s;
-        transform: rotateY(0deg);
-        position: relative;
-        transform-style: preserve-3d;
-        -webkit-transform-style: preserve-3d;
-        z-index: 3;
-    }
-    .flipped {
-        transition: 0.3s;
-        transform: rotateY(180deg);
-        transform-style: preserve-3d;
-    }
-    .front, .back {
-        width: 100%;
-        height: 100%;
-        background-color: white;
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-    .front {
-        background: url('icon.svg');
-        background-size: cover; 
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-        transform: rotateY(0deg); 
-        z-index: 2;
-    }
-    .back {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-        transform: rotateY(180deg); 
-        z-index: 1;
-        font-size: 250%;
-    }
-    .reward {
-        -webkit-box-shadow: 0px 0px 1px 2px rgba(16,160,0,0.7);
-        -moz-box-shadow: 0px 0px 1px 2px rgba(16,160,0,0.7);
-        box-shadow: 0px 0px 1px 2px rgba(16,160,0,0.7);
-    }
 
-</style>
 <body>
     <section id="welcome">
         <h1>Welcome to the memory game</h1>
